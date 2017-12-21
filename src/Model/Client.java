@@ -1,15 +1,15 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.TreeSet;
 
 /**
  * 
  */
-public class Client extends Personne {
+public class Client extends Personne implements Serializable {
 	/**
      * Variables
      */

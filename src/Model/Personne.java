@@ -1,12 +1,11 @@
 package Model;
 
-import java.util.Collection;
-import java.util.TreeSet;
+import java.io.Serializable;
 
 /**
  * 
  */
-public abstract class Personne {
+public abstract class Personne implements Serializable{
 
     /**
      * Default constructor

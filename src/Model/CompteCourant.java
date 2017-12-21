@@ -1,9 +1,11 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * 
  */
-public class CompteCourant extends Compte {
+public class CompteCourant extends Compte implements Serializable{
 
     /**
      * Default constructor
@@ -16,11 +18,11 @@ public class CompteCourant extends Compte {
      * Variables
      */
     private double decouvertMax;
-    private double retraitMax;
+    //private double retraitMax;
     
     public CompteCourant(double decouvertMax, double retraitMax){
     	this.decouvertMax = decouvertMax;
-    	this.retraitMax = retraitMax;
+    	//this.retraitMax = retraitMax;
     	this.setType("Compte courant");
     }
     
@@ -43,17 +45,17 @@ public class CompteCourant extends Compte {
 	/**
 	 * @return the retraitMax
 	 */
-	public double getRetraitMax() {
+	/*public double getRetraitMax() {
 		return retraitMax;
-	}
+	}*/
 
 	/**
 	 * @param retraitMax the retraitMax to set
 	 */
-	public void setRetraitMax(double retraitMax) {
+	/*//public void setRetraitMax(double retraitMax) {
 		this.retraitMax = retraitMax;
 	}
-
+ */
 
 
 	/* (non-Javadoc)
@@ -62,8 +64,8 @@ public class CompteCourant extends Compte {
 	public void retrait(double montant) {
 		if ((this.getSolde() - montant) < decouvertMax){
 			System.err.println("Vous ne pouvez pas dépasser votre découvert autorisé qui est de : " + this.decouvertMax);
-		}else if(montant > retraitMax){
-			System.err.println("Vous ne pouvez pas retirer plus de " + this.retraitMax + " euros à la fois");
+		//}else if(montant > retraitMax){
+			//System.err.println("Vous ne pouvez pas retirer plus de " + this.retraitMax + " euros à la fois");
 		}else if(montant < 0 ){
 	        	System.err.println("Le montant doit être positif");
 		}

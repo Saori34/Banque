@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,7 +9,7 @@ import java.util.Scanner;
 /**
  * 
  */
-public class Gestionnaire extends Personne {
+public class Gestionnaire extends Personne implements Serializable{
 
     /**
      * Default constructor
@@ -239,4 +240,24 @@ public class Gestionnaire extends Personne {
 	}
 		
 
+	/**
+	 * Saisir un montant
+	 * @return montant
+	 */
+	public double saisieMontant(){
+		Scanner sc = new Scanner(System.in);
+		double montant = 0.0;
+		do{
+			System.out.println("Veuillez saisir un montant positif : ");
+			montant = sc.nextDouble();
+		}while(montant < 0);
+		
+		return montant;
+	}
+	
+	@Override
+	public String toString(){
+		this.listerComptes();
+		return " ";
+	}
 }

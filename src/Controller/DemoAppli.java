@@ -1,10 +1,16 @@
 package Controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,34 +69,49 @@ public class DemoAppli {
 							 double montant = 0.0;
 									 switch(choixClient){
 									 
-										 case 0 : console.afficherChoixGestionnaire();
+										 case 0 : choixClient = 0;
+											 	  console.afficherChoixGestionnaire();
 											 	  choix = sc.nextInt();
 											 	  break;
 										 case 1 : compte = client.selectionnerCompte();
-										 		  montant = sc.nextDouble();
+										 		  montant = banquier.saisieMontant();
 										 		  compte.depot(montant);
+										 		  client.listerComptes();
 											 	  break;
-										 case 2 : 
+										 case 2 : compte = client.selectionnerCompte();
+										 		  montant = banquier.saisieMontant();
+										 		  compte.retrait(montant);
+										 		  client.listerComptes();
 											 	  break;
-										 case 3 : 
+										 case 3 : System.out.println("Pour faire un virement d'un compte A à un compte B : ");
+										 		  System.out.println("Sélectionnez compte A : ");
+										 		  compte = client.selectionnerCompte();
+										 		  System.out.println("Sélectionnez compte B : ");
+										 		  CompteCourant compteB = client.selectionnerCompte();
+								 		  		  montant = banquier.saisieMontant();
+								 		  		  compte.virementSur(compteB, montant);
+								 		  		  client.listerComptes();
 											 	  break;
 										 case 4 : System.out.println("Solde total tous comptes : " + df.format(banquier.SoldeTotalClient(client)) + " euros \n");
 											 	  break;
 										 case 5 : client.listerComptes();
 											 	  break;
-										 case 6 : banquier.supprimerClient(client);
-										 		  console.afficherChoixGestionnaire();
-										 		  choix = sc.nextInt();
-										 		  break;
 										default : System.err.println("Vous devez taper le numero correspondant à votre choix");
 												  break;
 									 }
-						 }while(choixClient > 5 || choixClient <= 0);
+						 }while(choixClient < 0 || choixClient > 0);
 				 		 break;
+				case 5 : client = banquier.selectionneClient();
+						 banquier.supprimerClient(client);
+						 break;
+				case 6 : saveDataIntoFile("./assets/saveClients.txt");
+						 break;
+				case 7 : restoreDataFromFile("./assets/saveClients.txt");
+						 break;
 				default : System.err.println("Vous devez taper le numero correspondant à votre choix");
 						  break;
 			}
-		}while(choix > 3 || choix != 0);
+		}while(choix > 6 || choix != 0 || choix < 4 );
 		
 		
 		sc.close();
@@ -111,7 +132,6 @@ public class DemoAppli {
 		String pathname = "./assets";
 		String fileName = "/bankCustomers.txt";
 		String []data;
-		
 		file = new File(pathname + fileName);
 		
 		try{
@@ -159,5 +179,63 @@ public class DemoAppli {
 		return clientele;
 	}
 
+	/**
+	 * Créer un fichier de sauvegarde des clients et des comptes
+	 * @param file
+	 */
+	private static void saveDataIntoFile(String pathName){
+		ObjectOutputStream oos;
+			
+		try{
+			oos = new ObjectOutputStream (
+					new BufferedOutputStream(
+							new FileOutputStream(
+									new File(pathName))));
+		oos.writeObject(banquier);
+		oos.close();
+		
+		}catch(FileNotFoundException e){
+			System.err.println("FileNotFoundException levée");
+		}catch(IOException e){
+			System.err.println("IOException levée");
+		}
+	}
+	
+	/**
+	 * Restaure les données à partir du fichier spécifié
+	 * @param file
+	 */
+	private static void restoreDataFromFile(String pathName){
+		ObjectInputStream ois;
+		
+		try{
+			ois = new ObjectInputStream(
+					new BufferedInputStream(
+							new FileInputStream(
+									new File(pathName))));
+			
+			try {
+				System.out.println((ois.readObject().toString()));
+			} catch (ClassNotFoundException e) {
+				System.err.println("ClassNotFoundException levée");
+			}
+		}catch(FileNotFoundException e){
+			System.err.println("FileNotFoundException levée");
+		}catch(IOException e){
+			System.err.println("IOException levée");
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

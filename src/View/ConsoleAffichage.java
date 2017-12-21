@@ -15,6 +15,9 @@ public class ConsoleAffichage {
 			+ "2. Lister les comptes des clients\n"
 			+ "3. Afficher le solde cumulé de tous les comptes de la liste de clients\n"
 			+ "4. Sélectionner un client\n"
+			+ "5. Supprimer un client\n"
+			+ "6. Sauvegarder les données clients\n"
+			+ "7. Afficher les données sauvegardées\n"
 			+ "0. Quitter\n");
 	}
 	
@@ -25,8 +28,7 @@ public class ConsoleAffichage {
 				+ "2. Faire un retrait\n"
 				+ "3. Faire un virement\n"
 				+ "4. Afficher le solde cumulé\n"
-				+ "5. Afficher tous les comptes\n"
-				+ "6. Supprimer le client");
+				+ "5. Afficher tous les comptes\n");
 		
 	}
 	

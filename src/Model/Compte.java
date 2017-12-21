@@ -1,11 +1,12 @@
 package Model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 /**
  * 
  */
-public abstract class Compte {
+public abstract class Compte implements Serializable{
 
     /**
      * Variables
@@ -78,6 +79,14 @@ public abstract class Compte {
         	System.err.println("Le montant doit être positif");
         solde += montant;
     }
+    
+    /**
+     * Faire un retrait d'un compte
+     * @param montant
+     */
+    public void retrait(double montant){
+    	solde -= montant;
+    }
 
 
 	/**Transférer un montant du compte manipulé sur un autre compte
@@ -88,8 +97,8 @@ public abstract class Compte {
     public void virementSur(Compte compteB, double montant) {
         if(montant < 0)
         	System.err.println("Le montant doit être positif");
-       compteB.solde += montant;
-       this.solde -= montant;
+       compteB.depot(montant);
+       this.retrait(montant);
     }
     
 
