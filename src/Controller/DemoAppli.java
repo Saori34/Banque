@@ -134,40 +134,45 @@ public class DemoAppli {
 		String []data;
 		file = new File(pathname + fileName);
 		
+		
+
+		
 		try{
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 			
-			//extraction chaine du fichier
-			String tmp, id;
-			while((tmp = br.readLine()) != null){
-				//On sépare en fonction du signe "*"
-				data = tmp.split("[*]");
-				//On met en majuscule
-				id = data[0].toUpperCase();
-				//On remplace tous les caractères n'étant pas des voyelles par une chaine vide
-				id = id.replaceAll("[^AEIOUY]", "");
-				//Si la chaine restante (seulement les voyelles donc) est égale ou sup à 2 on inverse les 2 premières voyelles et on concatene
-				if(id.length()>=2){
-					id = String.valueOf(id.charAt(1)).concat(String.valueOf(id.charAt(0)));
-					//Si il y a moins de 2 voyelles on double la 1ère (il y a forcément au moins une voyelle dans un prénom)
-				}else{
-					id = String.valueOf(id.charAt(0)).concat(String.valueOf(id.charAt(0)));
+			try{
+					//extraction chaine du fichier
+				String tmp, id;
+				while((tmp = br.readLine()) != null){
+					//On sépare en fonction du signe "*"
+					data = tmp.split("[*]");
+					//On met en majuscule
+					id = data[0].toUpperCase();
+					//On remplace tous les caractères n'étant pas des voyelles par une chaine vide
+					id = id.replaceAll("[^AEIOUY]", "");
+					//Si la chaine restante (seulement les voyelles donc) est égale ou sup à 2 on inverse les 2 premières voyelles et on concatene
+					if(id.length()>=2){
+						id = String.valueOf(id.charAt(1)).concat(String.valueOf(id.charAt(0)));
+						//Si il y a moins de 2 voyelles on double la 1ère (il y a forcément au moins une voyelle dans un prénom)
+					}else{
+						id = String.valueOf(id.charAt(0)).concat(String.valueOf(id.charAt(0)));
+					}
+					
+					//Puis on concatène la chaine de 2 voyelles à l'identifiant numérique
+					id = id.concat(data[1]);
+					
+					//On crée un nouveau client avec tous ces paramètres
+					client = new Client(data[0], profil, id, Integer.parseInt(data[2]), data[3] );
+								
+					//On ajoute le client à la collection
+					clientele.add(client);
 				}
-				
-				//Puis on concatène la chaine de 2 voyelles à l'identifiant numérique
-				id = id.concat(data[1]);
-				
-				//On crée un nouveau client avec tous ces paramètres
-				client = new Client(data[0], profil, id, Integer.parseInt(data[2]), data[3] );
-							
-				//On ajoute le client à la collection
-				clientele.add(client);
-			}
-			
+			}finally{
 			//Libérer les ressources
 			br.close();
 			fr.close();
+			}
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			System.err.println("Fichier non trouvé");
@@ -191,8 +196,11 @@ public class DemoAppli {
 					new BufferedOutputStream(
 							new FileOutputStream(
 									new File(pathName))));
-		oos.writeObject(banquier);
-		oos.close();
+			try{
+				oos.writeObject(banquier);
+			}finally{
+				oos.close();
+			}
 		
 		}catch(FileNotFoundException e){
 			System.err.println("FileNotFoundException levée");
@@ -216,7 +224,8 @@ public class DemoAppli {
 			
 			try {
 				System.out.println((ois.readObject().toString()));
-			} catch (ClassNotFoundException e) {
+				ois.close();
+			}catch (ClassNotFoundException e) {
 				System.err.println("ClassNotFoundException levée");
 			}
 		}catch(FileNotFoundException e){
