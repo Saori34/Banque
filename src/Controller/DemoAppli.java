@@ -20,6 +20,7 @@ import Model.Client;
 import Model.CompteCourant;
 import Model.Gestionnaire;
 import View.ConsoleAffichage;
+import View.FenetreAffichage;
 
 public class DemoAppli {
 
@@ -40,6 +41,15 @@ public class DemoAppli {
 		banquier.setClients(clientele);
 		
 		
+		FenetreAffichage fenetre = new FenetreAffichage();
+		
+		
+		
+		
+		
+	
+	}
+		/*
 		//On affiche l'interface de choix possible dans la console
 		Scanner sc = new Scanner(System.in);
 		int choix;
@@ -116,6 +126,8 @@ public class DemoAppli {
 		
 		sc.close();
 	}
+	
+	*/
 	/**
 	 * Créer une collection de client à partir des données d'un fichier texte formaté
 	 * @param file
