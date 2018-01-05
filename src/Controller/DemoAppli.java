@@ -25,7 +25,7 @@ import View.FenetreAffichage;
 public class DemoAppli {
 
 	static Collection <Client> clientele;
-	static Gestionnaire banquier = new Gestionnaire();
+	public static Gestionnaire banquier = new Gestionnaire();
 	static ConsoleAffichage console = new ConsoleAffichage(); 
 	static DecimalFormat df = new DecimalFormat("##0.##");
 	

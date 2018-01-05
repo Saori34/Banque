@@ -78,7 +78,7 @@ public class Gestionnaire extends Personne implements Serializable{
     
     
     /**
-     * Liste les clients d'un gestionnaire
+     * Liste les clients d'un gestionnaire en console
      */
     public void listerClients(){
 		Collection <Client> clientele = this.getClients();
@@ -92,6 +92,25 @@ public class Gestionnaire extends Personne implements Serializable{
     	}else{
     		System.out.println("La liste de client est vide");
     	}
+    }
+    
+    /**
+     * Liste les clients d'un gestionnaire en GUI
+     */
+    public String listerClientsGUI(){
+		Collection <Client> clientele = this.getClients();
+    	Iterator <Client> it = clientele.iterator();
+    	String temp = "";
+    	if (!clientele.isEmpty()){
+			while(it.hasNext()){
+				for(int i = 0 ; i <clientele.size() ; i++){
+					temp+= (i+1) + ". " + it.next().toString() + "\n";
+				}
+			}
+    	}else{
+    		temp = "La liste de client est vide";
+    	}
+    	return temp;
     }
 
     /**
