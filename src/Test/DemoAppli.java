@@ -1,5 +1,7 @@
-package Controller;
-
+package Test;
+/**
+ * Classe permettant de lancer le programme
+ */
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -11,13 +13,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Scanner;
 
+import Controller.Controller;
 import Model.Client;
-import Model.CompteCourant;
 import Model.Gestionnaire;
 import View.ConsoleAffichage;
 import View.FenetreAffichage;
@@ -27,8 +27,11 @@ public class DemoAppli {
 	static Collection <Client> clientele;
 	public static Gestionnaire banquier = new Gestionnaire();
 	static ConsoleAffichage console = new ConsoleAffichage(); 
-	static DecimalFormat df = new DecimalFormat("##0.##");
 	
+    public static File file;
+    public static FenetreAffichage fenetre;
+    public static Controller control;
+
 	
 	
 	
@@ -40,94 +43,21 @@ public class DemoAppli {
 		//On ajoute cette collection client à une instance Gestionnaire "banquier"
 		banquier.setClients(clientele);
 		
+		//On affiche la fenetre
+		fenetre = new FenetreAffichage();
 		
-		FenetreAffichage fenetre = new FenetreAffichage();
+		//On instancie le controller et les listeners
+		control = new Controller();
+		FenetreAffichage.getValider().addActionListener(control);
+		FenetreAffichage.getMenu().addListSelectionListener(control);
+		FenetreAffichage.getJtf().addActionListener(control);
+		FenetreAffichage.getAffichageComptes().addListSelectionListener(control);
 		
 		
 		
 		
-		
-	
 	}
-		/*
-		//On affiche l'interface de choix possible dans la console
-		Scanner sc = new Scanner(System.in);
-		int choix;
-		Client client;
-		CompteCourant compte;
-		
-		console.afficherChoix();
-		
-		do{
-			console.afficherChoixGestionnaire();
-			choix = sc.nextInt();
-					
-			switch(choix){
-		
-				case 1 : banquier.listerClients();
-						 break;
-				case 2 : banquier.listerComptes();
-						 break;
-				case 3 : System.out.println("Solde total tous comptes : " + df.format(banquier.soldeTotalComptes()) + " euros \n");
-						 break;
-				case 4 : client = banquier.selectionneClient();
-						 int choixClient;
-						 
-						 do{
-							 console.afficherChoixManipComptes();
-							 choixClient = sc.nextInt();
-							 double montant = 0.0;
-									 switch(choixClient){
-									 
-										 case 0 : choixClient = 0;
-											 	  console.afficherChoixGestionnaire();
-											 	  choix = sc.nextInt();
-											 	  break;
-										 case 1 : compte = client.selectionnerCompte();
-										 		  montant = banquier.saisieMontant();
-										 		  compte.depot(montant);
-										 		  client.listerComptes();
-											 	  break;
-										 case 2 : compte = client.selectionnerCompte();
-										 		  montant = banquier.saisieMontant();
-										 		  compte.retrait(montant);
-										 		  client.listerComptes();
-											 	  break;
-										 case 3 : System.out.println("Pour faire un virement d'un compte A à un compte B : ");
-										 		  System.out.println("Sélectionnez compte A : ");
-										 		  compte = client.selectionnerCompte();
-										 		  System.out.println("Sélectionnez compte B : ");
-										 		  CompteCourant compteB = client.selectionnerCompte();
-								 		  		  montant = banquier.saisieMontant();
-								 		  		  compte.virementSur(compteB, montant);
-								 		  		  client.listerComptes();
-											 	  break;
-										 case 4 : System.out.println("Solde total tous comptes : " + df.format(banquier.SoldeTotalClient(client)) + " euros \n");
-											 	  break;
-										 case 5 : client.listerComptes();
-											 	  break;
-										default : System.err.println("Vous devez taper le numero correspondant à votre choix");
-												  break;
-									 }
-						 }while(choixClient < 0 || choixClient > 0);
-				 		 break;
-				case 5 : client = banquier.selectionneClient();
-						 banquier.supprimerClient(client);
-						 break;
-				case 6 : saveDataIntoFile("./assets/saveClients.txt");
-						 break;
-				case 7 : restoreDataFromFile("./assets/saveClients.txt");
-						 break;
-				default : System.err.println("Vous devez taper le numero correspondant à votre choix");
-						  break;
-			}
-		}while(choix > 6 || choix != 0 || choix < 4 );
-		
-		
-		sc.close();
-	}
-	
-	*/
+			
 	/**
 	 * Créer une collection de client à partir des données d'un fichier texte formaté
 	 * @param file
@@ -200,7 +130,7 @@ public class DemoAppli {
 	 * Créer un fichier de sauvegarde des clients et des comptes
 	 * @param file
 	 */
-	private static void saveDataIntoFile(String pathName){
+	public static void saveDataIntoFile(String pathName){
 		ObjectOutputStream oos;
 			
 		try{
@@ -225,7 +155,7 @@ public class DemoAppli {
 	 * Restaure les données à partir du fichier spécifié
 	 * @param file
 	 */
-	private static void restoreDataFromFile(String pathName){
+	public static void restoreDataFromFile(String pathName){
 		ObjectInputStream ois;
 		
 		try{

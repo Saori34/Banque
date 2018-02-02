@@ -15,6 +15,7 @@ public class Client extends Personne implements Serializable {
      */
     private String numClient;
     private Collection<CompteCourant> listeComptes;
+    private Collection<Compte> cagnote = new ArrayList<>();
     private String genre;
     private int age;
     
@@ -22,13 +23,8 @@ public class Client extends Personne implements Serializable {
     /**
      * Default constructor
      */
-    public Client() {
-    	
-    	
-    	
-    	
+    public Client() {    	
     }
-    
     
 
 	/**
@@ -54,6 +50,10 @@ public class Client extends Personne implements Serializable {
 		return numClient;
 	}
 	
+	public String getName() {
+        return super.getPrenom();
+    }
+	
 	/**
 	 * 
 	 * @param num
@@ -75,6 +75,14 @@ public class Client extends Personne implements Serializable {
 	public void setCompte(CompteCourant compte) {
 		this.listeComptes.add(compte);
 	}
+	
+	public Collection<Compte> getCagnote() {
+        return cagnote;
+    }
+
+    public void setCagnote(Collection<Compte> cagnote) {
+        this.cagnote = cagnote;
+    }
 	
 	/**
 	 * 
@@ -117,18 +125,20 @@ public class Client extends Personne implements Serializable {
 	 * Liste les comptes du client
 	 */
 	@Override
-	public void listerComptes(){
+	public String[] listerComptes(){
 		Collection <CompteCourant> listeDeComptes = this.getListeComptes();
     	Iterator <CompteCourant> it = listeDeComptes.iterator();
+    	String[] comptes = new String[listeDeComptes.size()];
     	if(!listeDeComptes.isEmpty()){
 			while(it.hasNext()){
 				for(int i=0; i<listeDeComptes.size(); i++){
-					System.out.println((i+1) + ". " + it.next().toString());
+					comptes[i] = it.next().toString();
 				}
 			}
     	}else{
-    		System.out.println("La liste de comptes est vide !");
+    		System.err.println("La liste de comptes est vide !");
     	}
+    	return comptes;
 	}
 	
 	/**
@@ -175,6 +185,7 @@ public class Client extends Personne implements Serializable {
 		
 		return listeComptes;
 	}
+	
 	
 
 

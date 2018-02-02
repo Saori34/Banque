@@ -1,210 +1,213 @@
 package View;
 
+/**
+ * Classe représentant la vue
+ */
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
+import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
+import javax.swing.JScrollPane;
 
-import Controller.DemoAppli;
 
-public class FenetreAffichage extends JFrame{
-	
-	private JTextArea menu, affichageComptes;
-	private JButton valider;
-	private MaskFormatter chiffre;
-	private JFormattedTextField jtf;
-	
-	
-	
-	public FenetreAffichage(){
+
+public class FenetreAffichage extends JFrame {
+
+	private static JList<String> menu;
+	private static JList<String> affichageComptes;
+	private static JList<String> affichageDetails;
+	private static JButton valider;
+	private static JFormattedTextField jtf;
+	private Dimension dim;
+	private static Container c;
+
+	public FenetreAffichage() {
+
 		this.setTitle("Ma banque");
-		this.setSize(1200, 800);
+		this.setSize(1200, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
+
 		initComponents();
 		this.setVisible(true);
 	}
+
+	/**
+	 * Bouton valider
+	 * @return le bouton
+	 */
+	public static JButton getValider() {
+		return valider;
+	}
 	
-	public void initComponents(){
-		//Conteneur principal
-		JPanel content = new JPanel(new BorderLayout());
-	    content.setBackground(Color.white);
+	/**
+	 * @return the JList menu
+	 */
+	public static JList<String> getMenu() {
+		return menu;
+	}
+
+	/**
+	 * @return the JList affichageComptes
+	 */
+	public static JList<String> getAffichageComptes() {
+		return affichageComptes;
+	}
+
+	/**
+	 * @return the JList affichageDetails
+	 */
+	public static JList<String> getAffichageDetails() {
+		return affichageDetails;
+	}
+	
+	/**
+	 * Champs de texte pour rentrer le choix du menu
+	 * @return le champs de texte
+	 */
+	public static JFormattedTextField getJtf() {
+		return jtf;
+	}
+
+	/**
+	 * Retourne la JFrame
+	 * @return Container
+	 */
+	public static Container getJframe() {
+		return c;
+	}
+
+	public void initComponents() {
+		// Conteneur principal
+		c = this.getContentPane();
+
+		//panneau gauche
+		JPanel panneauGauche = new JPanel(new BorderLayout());
 		
-		//texte menuAction
+		// texte menuAction
 		JPanel panMenu = new JPanel();
-	    panMenu.setBackground(Color.white);
-	    panMenu.setPreferredSize(new Dimension(420, 200));
-	    panMenu.setBorder(BorderFactory.createTitledBorder("Menu actions"));
-	    JPanel panMenuBis = new JPanel();
-	    panMenuBis.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-	    panMenuBis.add(panMenu);
-	    
-	    menu = new JTextArea(	    
-	    		"1. Lister tous les clients\n"
-				+ "2. Lister les comptes des clients\n"
-				+ "3. Afficher le solde cumulé de tous les comptes de la liste de clients\n"
-				+ "4. Sélectionner un client\n"
-				+ "5. Supprimer un client\n"
-				+ "6. Sauvegarder les données clients\n"
-				+ "7. Afficher les données sauvegardées\n"
-				+ "0. Quitter\n", 8, 30);
-	    menu.setEditable(false);
-	  
-		panMenu.add(menu);
-		 
+		panMenu.setBackground(Color.white);
+		panMenu.setPreferredSize(new Dimension(420, 200));
+		panMenu.setBorder(BorderFactory.createTitledBorder("Menu actions"));
+		//panneau pour créer des marges
+		JPanel panMenuBis = new JPanel();
+		panMenuBis.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		panMenuBis.add(panMenu);
 		
-		//Ligne de texte pour rentrer le choix de la liste
+
+		menu = new JList<String>();
+		String[]menuListe = {"1. Lister tous les clients", "2. Lister les comptes des clients",
+				"3. Afficher le solde cumulé de tous les comptes de la liste de clients",
+				"4. Effectuer un retrait sur un compte", "5. Effectuer un depôt sur un compte", "6. Supprimer un client", "7. Sauvegarder les données clients"};
+		menu.setListData(menuListe);
+		panMenu.add(menu);
+
+		// Ligne de texte pour rentrer les montants 
 		JPanel choix = new JPanel();
 		choix.setPreferredSize(new Dimension(250, 35));
 		choix.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-		try{
-			  chiffre = new MaskFormatter("#");
-			  chiffre.setPlaceholder("8");
-			  jtf = new JFormattedTextField(chiffre);
-			  
-			}catch(ParseException e){
-				System.err.println("Erreur dans le JFormattedTextField");
-				}
-		
-	    jtf.setPreferredSize(new Dimension(200, 25));
-	  
-	    choix.add(jtf);
-	    
-	    
-	    //Bouton valider
-	    JPanel bouton = new JPanel();
-	    bouton.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-	    valider = new JButton("Valider");
-	    valider.setPreferredSize(new Dimension(100, 35));
-	    bouton.add(valider);
-	    
-	    	    
+		jtf = new JFormattedTextField();
+		jtf.setPreferredSize(new Dimension(200, 25));
+		choix.add(jtf);
 
-		//Mise en place du panel de menu principal
-	    
-	    content.add(panMenuBis, BorderLayout.NORTH);
-	    content.add(choix, BorderLayout.CENTER);
-	    content.add(bouton, BorderLayout.SOUTH);
-	    
-	    
-	    
-	    this.getContentPane().add(content, BorderLayout.WEST);
-	    
-	    valider.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String texte = jtf.getText();
-				int choix = Integer.parseInt(texte);
-				
-				if(choix == 8){
-					JOptionPane erreur = new JOptionPane();
-					JOptionPane.showMessageDialog(null, "Vous devez saisir un chiffre entre 0 et 7", "Erreur", JOptionPane.ERROR_MESSAGE);
-					
-				}else{
-					initPanneauDroite();
-					choixBouton();				
-				}
-			}	
-	    });
+		// Bouton valider
+		JPanel bouton = new JPanel();
+		bouton.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		valider = new JButton("Valider le montant");
+		valider.setPreferredSize(new Dimension(150, 35));
+		bouton.add(valider);
+
+		// Mise en place du panel de menu principal
+
+		panneauGauche.add(panMenuBis, BorderLayout.NORTH);
+		panneauGauche.add(choix, BorderLayout.CENTER);
+		panneauGauche.add(bouton, BorderLayout.SOUTH);
+
+		c.add(panneauGauche, BorderLayout.WEST);
+
+		// centrer la fenêtre
+		dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+		
+		// Creation d'un panneau à droite pour l'affichage
+		JPanel panneauDroite = new JPanel(new BorderLayout());
+
+		//menu de droite en haut pour les clients et les comptes
+		JPanel panneauDroiteHaut = new JPanel();
+		panneauDroiteHaut.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteHaut.setBackground(Color.WHITE);
+		
+		//panneau pour les marges 
+		JPanel panneauDroiteHautBis = new JPanel();
+		panneauDroiteHautBis.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		panneauDroiteHautBis.add(panneauDroiteHaut);		
+		
+		//menu de droite en bas pour les comptes ou les details
+		JPanel panneauDroiteBas = new JPanel();
+		panneauDroiteBas.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteBas.setBackground(Color.WHITE);
+		
+		//panneau pour les marges
+		JPanel panneauDroiteBasBis = new JPanel();
+		panneauDroiteBasBis.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		panneauDroiteBasBis.add(panneauDroiteBas);
+		
+		
+		// zone de texte 1
+		affichageComptes = new JList<>();
+		JScrollPane scroll = new JScrollPane(affichageComptes);
+		scroll.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteHaut.add(scroll);
+		//zone de texte 2
+		affichageDetails = new JList<>();
+		JScrollPane scrollBis = new JScrollPane(affichageDetails);
+		scrollBis.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteBas.add(scrollBis);
+		
+		//ajout des 2 panneaux d'affichage au panneau de droite
+		panneauDroite.add(panneauDroiteHautBis, BorderLayout.NORTH);
+		panneauDroite.add(panneauDroiteBasBis, BorderLayout.SOUTH);
+		
+		// Ajout au panneau principal
+		c.add(panneauDroite, BorderLayout.EAST);
+		c.setVisible(true);
 
 	}
-	
-	public void initPanneauDroite(){
-		//Creation d'un panneau à droite pour l'affichage
-		JPanel panneauDroite = new JPanel();
-		panneauDroite.setBackground(Color.WHITE);
-	    panneauDroite.setPreferredSize(new Dimension(420, 200));
-	    panneauDroite.setBorder(BorderFactory.createTitledBorder("Affichage"));
-	    JPanel panneauDroiteBis = new JPanel();
-	    panneauDroiteBis.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-	    panneauDroiteBis.add(panneauDroite);
-	    //zone de texte
-		affichageComptes = new JTextArea();
-		affichageComptes.setEditable(false);
-		panneauDroite.add(affichageComptes);
-		//Ajout au panneau principal
-		this.getContentPane().add(panneauDroite, BorderLayout.EAST);
-		this.setVisible(true);
-	
+
+/**
+ * affiche une fenetre d'erreur
+ * @param erreur String à fournir
+ */
+	public static void dialogErreurChiffre(String erreur) {
+		JOptionPane.showMessageDialog(null, erreur, "Erreur",
+				JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public void choixBouton(){
-		String texte = jtf.getText();
-		int choix = Integer.parseInt(texte);
-		switch(choix){
-		
-		case 1 : affichageComptes.setText(DemoAppli.banquier.listerClientsGUI());
-				 break;/*
-		case 2 : banquier.listerComptes();
-				 break;
-		case 3 : System.out.println("Solde total tous comptes : " + df.format(banquier.soldeTotalComptes()) + " euros \n");
-				 break;
-		case 4 : client = banquier.selectionneClient();
-				 int choixClient;
-				 
-				 do{
-					 console.afficherChoixManipComptes();
-					 choixClient = sc.nextInt();
-					 double montant = 0.0;
-							 switch(choixClient){
-							 
-								 case 0 : choixClient = 0;
-									 	  console.afficherChoixGestionnaire();
-									 	  choix = sc.nextInt();
-									 	  break;
-								 case 1 : compte = client.selectionnerCompte();
-								 		  montant = banquier.saisieMontant();
-								 		  compte.depot(montant);
-								 		  client.listerComptes();
-									 	  break;
-								 case 2 : compte = client.selectionnerCompte();
-								 		  montant = banquier.saisieMontant();
-								 		  compte.retrait(montant);
-								 		  client.listerComptes();
-									 	  break;
-								 case 3 : System.out.println("Pour faire un virement d'un compte A à un compte B : ");
-								 		  System.out.println("Sélectionnez compte A : ");
-								 		  compte = client.selectionnerCompte();
-								 		  System.out.println("Sélectionnez compte B : ");
-								 		  CompteCourant compteB = client.selectionnerCompte();
-						 		  		  montant = banquier.saisieMontant();
-						 		  		  compte.virementSur(compteB, montant);
-						 		  		  client.listerComptes();
-									 	  break;
-								 case 4 : System.out.println("Solde total tous comptes : " + df.format(banquier.SoldeTotalClient(client)) + " euros \n");
-									 	  break;
-								 case 5 : client.listerComptes();
-									 	  break;
-								default : System.err.println("Vous devez taper le numero correspondant à votre choix");
-										  break;
-							 }
-				 }while(choixClient < 0 || choixClient > 0);
-		 		 break;
-		case 5 : client = banquier.selectionneClient();
-				 banquier.supprimerClient(client);
-				 break;
-		case 6 : saveDataIntoFile("./assets/saveClients.txt");
-				 break;
-		case 7 : restoreDataFromFile("./assets/saveClients.txt");
-				 break;
-		default : System.err.println("Vous devez taper le numero correspondant à votre choix");
-				  break;
-		*/
-		}
+	/**
+	 * affiche une fenetre d'information
+	 * @param info String à fournir
+	 */
+	public static void dialogInfo(String info) {
+		JOptionPane.showMessageDialog(null, info, "Information",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	/**
+	 * affiche une fenetre de confirmation pour supprimer un client
+	 * @return code de confirmation ou d'annulation
+	 */
+	public static int dialogConfirm() {
+		JOptionPane jop = new JOptionPane();			
+		return JOptionPane.showConfirmDialog(null, "Etes-vous sûr de voulois supprimer ce client ?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 	}
 
 }

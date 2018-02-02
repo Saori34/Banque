@@ -22,7 +22,8 @@ public class Gestionnaire extends Personne implements Serializable{
      * 
      */
     private final long numEmploye;
-    private Collection<Client> clients;
+    public static Collection<Client> clientele;
+    public static Collection<Compte> cptes = new ArrayList<Compte>();
     
 
 
@@ -33,14 +34,14 @@ public class Gestionnaire extends Personne implements Serializable{
      * @return the client
 	 */
 	public Collection<Client>  getClients() {
-		return clients;
+		return clientele;
 	}
 
 	/**
 	 * @param client the client to set
 	 */
 	public void setClients(Collection<Client> clients) {
-		this.clients = clients;
+		this.clientele = clients;
 	}
 
 	/**
@@ -49,6 +50,15 @@ public class Gestionnaire extends Personne implements Serializable{
 	public long getNumEmploye() {
 		return numEmploye;
 	}
+	
+	/**
+	 * 
+     * @return liste de comptes gérées par l'employe
+	 */
+	public Collection<Compte>  getComptes() {
+		return cptes;
+	}
+	
 
 
 //METHODES
@@ -62,9 +72,6 @@ public class Gestionnaire extends Personne implements Serializable{
         client.setCompte(new CompteCourant());
     }
     
-   // public void ouvertureLivretEpargne(Client client){
-    //	client.setCompte(new LivretEpargne());
-   // }
     
     /**
      * 
@@ -75,102 +82,31 @@ public class Gestionnaire extends Personne implements Serializable{
     	return new Client();
     }
     
-    
-    
-    /**
-     * Liste les clients d'un gestionnaire en console
-     */
-    public void listerClients(){
-		Collection <Client> clientele = this.getClients();
-    	Iterator <Client> it = clientele.iterator();
-    	if (!clientele.isEmpty()){
-			while(it.hasNext()){
-				for(int i = 0 ; i <clientele.size() ; i++){
-					System.out.println((i+1) + ". " + it.next().toString());
-				}
-			}
-    	}else{
-    		System.out.println("La liste de client est vide");
-    	}
-    }
+
     
     /**
      * Liste les clients d'un gestionnaire en GUI
+     * @return String liste des clients
      */
-    public String listerClientsGUI(){
+    public String[] listerClientsGUI(){
 		Collection <Client> clientele = this.getClients();
     	Iterator <Client> it = clientele.iterator();
-    	String temp = "";
+    	String[] liste = new String[clientele.size()];
     	if (!clientele.isEmpty()){
 			while(it.hasNext()){
 				for(int i = 0 ; i <clientele.size() ; i++){
-					temp+= (i+1) + ". " + it.next().toString() + "\n";
+					liste[i] = it.next().toString();
 				}
 			}
     	}else{
-    		temp = "La liste de client est vide";
+    		System.err.println("La liste de client est vide") ;
     	}
-    	return temp;
+    	return liste;
     }
 
-    /**
-     * Liste tous les comptes de tous les clients
-     */
-	@Override
-	public void listerComptes() {
-		Collection <Client> clientele = this.getClients();
-    	Iterator <Client> it = clientele.iterator();
-    	Client client;
-    	
-    	//On va de client en client dans la collection client
-		if(!clientele.isEmpty()){
-	    	while(it.hasNext()){
-				client = it.next();
-				//On écrit le nom du client
-				System.out.println(client.toString());
-				Collection <CompteCourant> listeDeComptes = client.getListeComptes();
-		    	Iterator <CompteCourant> itBis = listeDeComptes.iterator();
-		    	//On va de compte en compte dans la collection compte
-		    	if(!listeDeComptes.isEmpty()){
-					while(itBis.hasNext()){
-						//On écrit la phrase de description du compte
-						System.out.println(itBis.next().toString());
-					}
-		    	}else{
-		    		System.out.println("La liste de comptes est vide !");
-		    	}
-		    	System.out.println("-----------------------------------------");
-			}
-		}else{
-			System.out.println("La liste de client est vide !");
-		}
-	}
 	
-	/**
-	 * Sélection de l'utilisateur d'un client en affichant une liste
-	 * @return Client client
-	 */
-	public Client selectionneClient(){
-		Scanner sc = new Scanner(System.in);
-		int choix = 0;
-		Collection <Client> clientele = this.getClients();
-		Client client = new Client();
-		if(!clientele.isEmpty()){
-			System.out.println("Veuillez saisir le numéro du client dans la liste suivante: ");
-			 this.listerClients();
-			 do{
-				 choix = sc.nextInt();
-				 if(choix <= 0 || choix > clientele.size()){
-					 System.err.println("Vous devez saisir un numéro de client compris dans la liste (entre 1 et la fin de la liste)\n");
-				 }else{
-					 client = ((ArrayList<Client>) clientele).get(choix-1);//On n'oublie pas de retirer 1 car la liste commence ici à l'index 0 contrairement à la liste montrée à l'utilisateur
-				 }
-			 }while(choix <= 0 || choix > clientele.size());
-		}else{
-			System.err.println("\nLa liste de client est vide\n");
-		}
-		 return client;
-	}
+	  
+    
 	/**
 	 * Supprime un client de la collection d'un gestionnaire grâce à son ID
 	 */
@@ -253,6 +189,7 @@ public class Gestionnaire extends Personne implements Serializable{
 		if(!listeDeComptes.isEmpty()){
 			while(it.hasNext()){
 				soldeTotal += it.next().getSolde();
+			 
 			}
 		}
 		return soldeTotal;
@@ -278,5 +215,30 @@ public class Gestionnaire extends Personne implements Serializable{
 	public String toString(){
 		this.listerComptes();
 		return " ";
+	}
+
+	
+	@Override
+	public String[] listerComptes() {
+		
+		Collection<Client> clientele = this.getClients();
+    	Iterator <Client> it = clientele.iterator();
+    	Collection <CompteCourant> listeCompte = new ArrayList<>();
+    	String[] comptes;
+    	if(!clientele.isEmpty()){
+			while(it.hasNext()){
+					listeCompte.addAll(it.next().getListeComptes());
+			}
+    	}else{
+    		System.err.println("La liste de comptes est vide !");
+    	}
+    	Iterator<CompteCourant> itBis = listeCompte.iterator();
+		comptes = new String[listeCompte.size()];
+		while(itBis.hasNext()) {
+			for(int i=0; i<listeCompte.size(); i++) {
+				comptes[i] = itBis.next().toString();
+			}
+		}
+    	return comptes;
 	}
 }

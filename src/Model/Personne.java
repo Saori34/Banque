@@ -53,16 +53,11 @@ public abstract class Personne implements Serializable{
 	
 	/**
 	 * return all the comptes
+	 * @return 
 	 */
-	public abstract void listerComptes();
-
-
+	public abstract String[] listerComptes();
 	
-
-	
-	
-	
-	
+	   
 	
 
 }

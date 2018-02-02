@@ -2,6 +2,8 @@ package Model;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * 
@@ -14,6 +16,7 @@ public abstract class Compte implements Serializable{
 	private final long numCompte;
 	private double solde;
 	private String type;
+    public static Collection<Compte> accounts = new ArrayList<>();
 	
 	DecimalFormat df = new DecimalFormat("##0.##");
 	
@@ -25,7 +28,8 @@ public abstract class Compte implements Serializable{
     public Compte() {
     	numCompte = (long) Math.floor(Math.random() * 10000000);
     }
-
+    
+   
     
     //GETTERS AND SETTERS
     
@@ -47,7 +51,7 @@ public abstract class Compte implements Serializable{
 	/**
 	 * @return the numCompte
 	 */
-	public long getNumCompte() {
+	public Long getNumCompte() {
 		return numCompte;
 	}
 	/**
@@ -67,8 +71,8 @@ public abstract class Compte implements Serializable{
 		this.type = type;
 	}
 
-
-	//METHODES
+	
+	 	//METHODES
 
     /**Ajouter un montant à un compte
      * @param montant 
@@ -83,9 +87,11 @@ public abstract class Compte implements Serializable{
     /**
      * Faire un retrait d'un compte
      * @param montant
+     * @return 
      */
-    public void retrait(double montant){
+    public boolean retrait(double montant){
     	solde -= montant;
+    	return true;
     }
 
 
@@ -103,17 +109,14 @@ public abstract class Compte implements Serializable{
     
 
 
-	/* (non-Javadoc)
+	/* Description du compte
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "Le solde du compte n°" + getNumCompte() + " est actuellement de : " + df.format(getSolde()) + " euros";
 	}
-
-
-
-    
-    
+	
+	     
 
 }
