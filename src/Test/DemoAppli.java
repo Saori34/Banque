@@ -19,14 +19,12 @@ import java.util.Collection;
 import Controller.Controller;
 import Model.Client;
 import Model.Gestionnaire;
-import View.ConsoleAffichage;
 import View.FenetreAffichage;
 
 public class DemoAppli {
 
 	static Collection <Client> clientele;
 	public static Gestionnaire banquier = new Gestionnaire();
-	static ConsoleAffichage console = new ConsoleAffichage(); 
 	
     public static File file;
     public static FenetreAffichage fenetre;
@@ -52,9 +50,6 @@ public class DemoAppli {
 		FenetreAffichage.getMenu().addListSelectionListener(control);
 		FenetreAffichage.getJtf().addActionListener(control);
 		FenetreAffichage.getAffichageComptes().addListSelectionListener(control);
-		
-		
-		
 		
 	}
 			
@@ -130,16 +125,19 @@ public class DemoAppli {
 	 * Créer un fichier de sauvegarde des clients et des comptes
 	 * @param file
 	 */
-	public static void saveDataIntoFile(String pathName){
+	public static boolean saveDataIntoFile(String pathName){
 		ObjectOutputStream oos;
 			
+		Collection <Client> clients = clientele;
+		
 		try{
 			oos = new ObjectOutputStream (
 					new BufferedOutputStream(
 							new FileOutputStream(
 									new File(pathName))));
 			try{
-				oos.writeObject(banquier);
+				oos.writeObject(clients);
+				oos.flush();
 			}finally{
 				oos.close();
 			}
@@ -149,15 +147,16 @@ public class DemoAppli {
 		}catch(IOException e){
 			System.err.println("IOException levée");
 		}
+		return true;
 	}
 	
 	/**
 	 * Restaure les données à partir du fichier spécifié
 	 * @param file
 	 */
-	public static void restoreDataFromFile(String pathName){
+	public static Collection<Client> restoreDataFromFile(String pathName){
 		ObjectInputStream ois;
-		
+		Collection<Client> clients = new ArrayList<Client>();
 		try{
 			ois = new ObjectInputStream(
 					new BufferedInputStream(
@@ -165,7 +164,7 @@ public class DemoAppli {
 									new File(pathName))));
 			
 			try {
-				System.out.println((ois.readObject().toString()));
+				clients = (Collection<Client>) ois.readObject();
 				ois.close();
 			}catch (ClassNotFoundException e) {
 				System.err.println("ClassNotFoundException levée");
@@ -175,6 +174,7 @@ public class DemoAppli {
 		}catch(IOException e){
 			System.err.println("IOException levée");
 		}
+		return clients;
 		
 	}
 	

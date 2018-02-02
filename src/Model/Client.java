@@ -136,7 +136,7 @@ public class Client extends Personne implements Serializable {
 				}
 			}
     	}else{
-    		System.err.println("La liste de comptes est vide !");
+    		System.out.println("La liste de comptes est vide !");
     	}
     	return comptes;
 	}
@@ -163,7 +163,7 @@ public class Client extends Personne implements Serializable {
 				 }
 			 }while(choix <= 0 || choix > listeComptes.size());
 		}else{
-			System.err.println("\nLa liste de comptes est vide\n");
+			System.out.println("\nLa liste de comptes est vide\n");
 		}
 		 return compte;
 	}

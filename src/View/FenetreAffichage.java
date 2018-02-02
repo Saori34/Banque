@@ -107,7 +107,8 @@ public class FenetreAffichage extends JFrame {
 		menu = new JList<String>();
 		String[]menuListe = {"1. Lister tous les clients", "2. Lister les comptes des clients",
 				"3. Afficher le solde cumulé de tous les comptes de la liste de clients",
-				"4. Effectuer un retrait sur un compte", "5. Effectuer un depôt sur un compte", "6. Supprimer un client", "7. Sauvegarder les données clients"};
+				"4. Effectuer un retrait sur un compte", "5. Effectuer un depôt sur un compte", "6. Supprimer un client", "7. Sauvegarder les données clients",
+				"8. Restaurer les données sauvegardées"};
 		menu.setListData(menuListe);
 		panMenu.add(menu);
 

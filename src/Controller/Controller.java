@@ -55,31 +55,36 @@ public class Controller implements ActionListener, ListSelectionListener {
 		if(arg0.getSource() == valider) {
 				if(jtf.getText() != "") {
 					String texte = jtf.getText();
-					try {
-						int montant = Integer.parseInt(texte);
-						if(montant < 0 ){
-							FenetreAffichage.dialogErreurChiffre("Le montant ne doit pas être inférieur à 0");
-						}
-						if(retrait) {
-							compte = ((ArrayList<CompteCourant>) (((ArrayList<Client>) DemoAppli.banquier.getClients()).get(getIndexListe(affichageComptes))).getListeComptes()).get(getIndexListe(affichageDetails));
-							if(compte.retrait(montant)) {
-								jtf.setText("");
-								FenetreAffichage.dialogInfo("Retrait de " + montant + "€ effectué");
-								affichageDetails.setListData(recupClient().listerComptes());
-							}else {
-								FenetreAffichage.dialogInfo("Le retrait n'a pas pu être effectué");
+					//si un compte est selectionne
+					if(affichageDetails.getSelectedIndex() != -1){
+						try {
+							int montant = Integer.parseInt(texte);
+							if(montant < 0 ){
+								FenetreAffichage.dialogErreurChiffre("Le montant ne doit pas être inférieur à 0");
 							}
+							if(retrait) {
+								compte = recupCompte();
+								if(compte.retrait(montant)) {
+									jtf.setText("");
+									FenetreAffichage.dialogInfo("Retrait de " + montant + "€ effectué");
+									affichageDetails.setListData(recupClient().listerComptes());
+								}else {
+									FenetreAffichage.dialogInfo("Le retrait n'a pas pu être effectué");
+								}
+							}
+							else if(depot) {
+								compte = recupCompte();
+								compte.depot(montant);
+								jtf.setText("");
+								FenetreAffichage.dialogInfo("Dépôt de " + montant + "€ effectué");
+								affichageDetails.setListData(recupClient().listerComptes());
+							}
+							
+						}catch(NumberFormatException e) {
+							FenetreAffichage.dialogErreurChiffre("Le montant doit être un nombre supérieur à 0");
 						}
-						else if(depot) {
-							compte = ((ArrayList<CompteCourant>) (((ArrayList<Client>) DemoAppli.banquier.getClients()).get(getIndexListe(affichageComptes))).getListeComptes()).get(getIndexListe(affichageDetails));
-							compte.depot(montant);
-							jtf.setText("");
-							FenetreAffichage.dialogInfo("Dépôt de " + montant + "€ effectué");
-							affichageDetails.setListData(recupClient().listerComptes());
-						}
-						
-					}catch(NumberFormatException e) {
-						FenetreAffichage.dialogErreurChiffre("Le montant doit être un nombre supérieur à 0");
+					}else {
+						FenetreAffichage.dialogErreurChiffre("Vous devez d'abord sélectionner un compte");
 					}
 				}else{		
 					FenetreAffichage.dialogErreurChiffre("Veuillez taper un montant supérieur à 0");
@@ -93,7 +98,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		JList<String> liste = (JList<String>) arg0.getSource();
-		if(arg0.getValueIsAdjusting() == false) {
+		if(!arg0.getValueIsAdjusting()) {
 			switch(liste.getName()) {
 				case "menu":
 					//si on clique sur le menu
@@ -104,13 +109,25 @@ public class Controller implements ActionListener, ListSelectionListener {
 					break;	
 				case "affichageComptes" :
 					// si on clique sur un élement de la liste de droite en haut
+					//si ce sont les clients qui sont affiches
 					if(clients) {
-						affichageDetails.setListData(recupClient().listerComptes());
-						comptes = true;
+						//on verifie qu'un client est selectionne
+						if(affichageComptes.getSelectedIndex() != -1) {
+							affichageDetails.setListData(recupClient().listerComptes());
+							comptes = true;
+							if(menu.getSelectedIndex() == 5) {
+									int res = FenetreAffichage.dialogConfirm();
+									if(res == JOptionPane.OK_OPTION) {
+										DemoAppli.banquier.supprimerClient(recupClient());
+										afficherListeClients();
+									}
+							}
+						}
 					}
 					break;
 				case "affichageDetails" :
 					//si on clique sur un élement de la liste de droite en bas
+					//si ce sont les comptes clients qui sont affiches
 					if(comptes) {
 							recupCompte();
 					}
@@ -148,6 +165,13 @@ public CompteCourant recupCompte() {
 }
 
 /**
+ * Affiche la liste des cliens dans la fenetre prévue à cet effet
+ */
+public void afficherListeClients() {
+	affichageComptes.setListData(DemoAppli.banquier.listerClientsGUI());
+}
+
+/**
  * renvoie l'index de la liste selectionnee pour retrouver l'objet de la collection
  * @param liste selectionnee
  * @return int index
@@ -157,49 +181,70 @@ public int getIndexListe(JList liste) {
 }
 
 public void choixMenu(int index){
+	
 	switch(index){
 	
-	case 0 : clients = true;
-			comptes = false;
-			affichageComptes.setListData(DemoAppli.banquier.listerClientsGUI());
-			 break;
-	case 1 : comptes = true;
-			clients = false;
-			affichageComptes.setListData(DemoAppli.banquier.listerComptes());
-			 break;
-	case 2 :comptes = false;
-			clients = false;
-			String[] list = {"Solde total tous comptes : " + df.format(DemoAppli.banquier.soldeTotalComptes()) + " euros"};
-			affichageComptes.setListData(list);
-			 break;
-	case 3 : clients = true;
-			comptes = false;
-			 retrait = true;
-			 depot = false;
-			 affichageComptes.setListData(DemoAppli.banquier.listerClientsGUI());
-			 break;
-	case 4 : clients = true;
-			comptes = false;
-			retrait = false;
-			depot = true;
-			affichageComptes.setListData(DemoAppli.banquier.listerClientsGUI());
-			break;
-	case 5 : clients = true;
-			comptes = true;
-			affichageComptes.setListData(DemoAppli.banquier.listerClientsGUI());
-			if(getIndexListe(affichageComptes)>= 0) {
-				int res = FenetreAffichage.dialogConfirm();
-				if(res == JOptionPane.OK_OPTION) {
-					DemoAppli.banquier.supprimerClient((((ArrayList<Client>) DemoAppli.banquier.getClients()).get(getIndexListe(affichageComptes))));
-			}
-				}
-			 break;
-	case 6 : comptes = false;
-			clients = false;
-			DemoAppli.saveDataIntoFile("./assets/saveClients.txt");
-			 break;
+	case 0 :
+		clients = true;
+		comptes = false;
+		afficherListeClients();
+		 break;
+	case 1 : 
+		comptes = true;
+		clients = false;
+		affichageComptes.setListData(DemoAppli.banquier.listerComptes());
+		 break;
+	case 2 :
+		comptes = false;
+		clients = false;
+		//on affiche le solde total des comptes
+		String[] list = {"Solde total tous comptes : " + df.format(DemoAppli.banquier.soldeTotalComptes()) + " euros"};
+		affichageComptes.setListData(list);
+		 break;
+	case 3 : 
+		clients = true;
+		comptes = false;
+		retrait = true;
+		depot = false;
+		afficherListeClients();
+		break;
+	case 4 :
+		clients = true;
+		comptes = false;
+		retrait = false;
+		depot = true;
+		afficherListeClients();
+		break;
+	case 5 :
+		clients = true;
+		comptes = true;
+		afficherListeClients();
+		 break;
+	case 6 : 
+		comptes = false;
+		clients = false;
+		int res = FenetreAffichage.dialogConfirm();
+		if(res == JOptionPane.OK_OPTION) {
+			//on sauvegarde la liste clients
+			if(DemoAppli.saveDataIntoFile("./assets/saveClients.txt"))
+				FenetreAffichage.dialogInfo("La sauvegarde a bien été effectuée");
+		}
+		
+		 break;
+	case 7 :
+		comptes = false;
+		clients = false;
+		int result = FenetreAffichage.dialogConfirm();
+		if(result == JOptionPane.OK_OPTION) {
+			//on restaure la liste clients
+			DemoAppli.banquier.setClients(DemoAppli.restoreDataFromFile("./assets/saveClients.txt"));
+			//on l'assigne au gestionnaire 
+			afficherListeClients();
+			FenetreAffichage.dialogInfo("La sauvegarde a été chargée");
+		}
+		break;
 	}
-
+	
 }
 
 

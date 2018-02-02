@@ -230,7 +230,7 @@ public class Gestionnaire extends Personne implements Serializable{
 					listeCompte.addAll(it.next().getListeComptes());
 			}
     	}else{
-    		System.err.println("La liste de comptes est vide !");
+    		System.out.println("La liste de comptes est vide");
     	}
     	Iterator<CompteCourant> itBis = listeCompte.iterator();
 		comptes = new String[listeCompte.size()];
