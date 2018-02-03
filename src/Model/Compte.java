@@ -96,8 +96,14 @@ public abstract class Compte implements Serializable{
      * @return 
      */
     public boolean retrait(double montant){
-    	solde -= montant;
-    	return true;
+    	if(type.equals("Livret d'épargne")){
+    		FenetreAffichage.dialogErreur("Vous ne pouvez pas faire de retrait depuis un livret d'épargne");
+    		return false;
+    	}
+    	else {
+    		solde -= montant;
+    		return true;
+    	}
     }
 
 
@@ -107,11 +113,17 @@ public abstract class Compte implements Serializable{
      * 
      */
     public boolean virementSur(Compte compteB, double montant) {
+    	boolean ok = false;
         if(montant < 0)
         	FenetreAffichage.dialogErreur("Le montant doit être positif");
-       compteB.depot(montant);
-       this.retrait(montant);
-       return true;
+        else if(type.equals("Livret d'épargne"))
+    		FenetreAffichage.dialogErreur("Vous ne pouvez pas faire de retrait depuis un livret d'épargne");
+        else{
+        	compteB.depot(montant);
+        	this.retrait(montant);
+            ok = true;
+        }
+       return ok;
     }
     
 
@@ -121,7 +133,7 @@ public abstract class Compte implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "Le solde du compte n°" + getNumCompte() + " est actuellement de : " + df.format(getSolde()) + " euros";
+		return "Le solde du " + getType() + " n°" + getNumCompte() + " est actuellement de : " + df.format(getSolde()) + " euros";
 	}
 	
 	     

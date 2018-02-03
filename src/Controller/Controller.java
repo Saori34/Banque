@@ -17,7 +17,6 @@ import javax.swing.event.ListSelectionListener;
 
 import Model.Client;
 import Model.Compte;
-import Model.CompteCourant;
 import Test.DemoAppli;
 import View.FenetreAffichage;
 
@@ -29,9 +28,9 @@ public class Controller implements ActionListener, ListSelectionListener {
 	private JList <String>affichageComptes;
 	private JList<String> affichageDetails;
 	static DecimalFormat df = new DecimalFormat("##0.##");
-	static CompteCourant compte1;
-	static CompteCourant compte2;
-	static CompteCourant compte;
+	static Compte compte1;
+	static Compte compte2;
+	static Compte compte;
 	
 	private boolean clients = false;
 	private boolean comptes = false;
@@ -110,46 +109,37 @@ public class Controller implements ActionListener, ListSelectionListener {
 		JList<String> liste = (JList<String>) arg0.getSource();
 		if(!arg0.getValueIsAdjusting()) {
 			switch(liste.getName()) {
-				case "menu":
-					//si on clique sur le menu
+				case "menu"://si on clique sur le menu
 					comptes = false;
 					clients = false;
 					int index = menu.getSelectedIndex();
 					choixMenu(index);	
 					break;	
-				case "affichageComptes" :
-					// si on clique sur un élement de la liste de droite en haut
-					//si ce sont les clients qui sont affiches
-					if(clients) {
-						//on verifie qu'un client est selectionne
-						if(affichageComptes.getSelectedIndex() != -1) {
+				case "affichageComptes" :// si on clique sur un élement de la liste de droite en haut
+					if(clients) {//si ce sont les clients qui sont affiches
+						if(affichageComptes.getSelectedIndex() != -1) {//on verifie qu'un client est selectionne
 							affichageDetails.setListData(recupClient().listerComptes());
 							comptes = true;
-							//si on a choisi l'option supprimer client
-							if(menu.getSelectedIndex() == 6) {
-									int res = FenetreAffichage.dialogConfirm("Etes-vous sûr de vouloir supprimer ce client ?");
-									if(res == JOptionPane.OK_OPTION) {
-										DemoAppli.banquier.supprimerClient(recupClient());
-										afficherListeClients();
-									}
+							if(menu.getSelectedIndex() == 6) {//si on a choisi l'option supprimer client
+								int res = FenetreAffichage.dialogConfirm("Etes-vous sûr de vouloir supprimer ce client ?");
+								if(res == JOptionPane.OK_OPTION) {
+									DemoAppli.banquier.supprimerClient(recupClient());
+									afficherListeClients();
+								}
 							}
 						}
 					}
 					break;
-				case "affichageDetails" :
-					//si on clique sur un élement de la liste de droite en bas
-					//si ce sont les comptes clients qui sont affiches
-					if(comptes) {
-						//si un item est sélectionné
-						if(affichageDetails.getSelectedIndex() != -1) {
-							//si on a choisi l'option virement
-							if(menu.getSelectedIndex() == 5) {
-								//si isFirst = true alors 1er compte
-								if(isFirst) {
+				case "affichageDetails" : //si on clique sur un élement de la liste de droite en bas
+					if(comptes) {//si ce sont les comptes clients qui sont affiches
+						if(affichageDetails.getSelectedIndex() != -1) {//si un item est sélectionné
+							if(menu.getSelectedIndex() == 5) {//si on a choisi l'option virement
+								if(isFirst) {//si isFirst = true alors 1er compte
 									isFirst = false;
 									compte1 = recupCompte();
 									FenetreAffichage.dialogInfo("Veuillez sélectionner le compte sur lequel faire le virement");
-								}else {
+								}
+								else {
 									isFirst = true;
 									FenetreAffichage.dialogInfo("Veuillez saisir le montant du virement et cliquer sur valider");
 								}
@@ -182,13 +172,13 @@ public Client recupClient() {
  * Renvoie le compte selectionne dans la liste
  * @return CompteCourant
  */
-public CompteCourant recupCompte() {
+public Compte recupCompte() {
 	if(comptes) {
 		Compte cpt;
-		Collection<CompteCourant>comptes = new ArrayList<>();
+		Collection<Compte>comptes = new ArrayList<>();
 		comptes = recupClient().getListeComptes(); 
-		cpt = ((ArrayList<CompteCourant>) comptes).get(getIndexListe(affichageDetails));
-		return (CompteCourant) cpt;
+		cpt = ( (ArrayList<Compte>) comptes).get(getIndexListe(affichageDetails));
+		return cpt;
 	}
 	return null;
 }
@@ -205,7 +195,7 @@ public void afficherListeClients() {
  * @param liste selectionnee
  * @return int index
  */
-public int getIndexListe(JList liste) {
+public int getIndexListe(JList<String> liste) {
 	return liste.getSelectedIndex();
 }
 

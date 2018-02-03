@@ -17,6 +17,8 @@ public class LivretEpargne extends Compte {
      * Default constructor
      */
     public LivretEpargne() {
+    	this.setSolde(Math.random()*(100000.00 - (-1000.00)) + (-1000.00));
+    	this.setType("Livret d'épargne");
     }
 
     /**

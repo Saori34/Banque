@@ -148,7 +148,7 @@ public class FenetreAffichage extends JFrame {
 
 		//menu de droite en haut pour les clients et les comptes
 		JPanel panneauDroiteHaut = new JPanel();
-		panneauDroiteHaut.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteHaut.setPreferredSize(new Dimension(520, 200));
 		panneauDroiteHaut.setBackground(Color.WHITE);
 		
 		//panneau pour les marges 
@@ -158,7 +158,7 @@ public class FenetreAffichage extends JFrame {
 		
 		//menu de droite en bas pour les comptes ou les details
 		JPanel panneauDroiteBas = new JPanel();
-		panneauDroiteBas.setPreferredSize(new Dimension(420, 200));
+		panneauDroiteBas.setPreferredSize(new Dimension(520, 200));
 		panneauDroiteBas.setBackground(Color.WHITE);
 		
 		//panneau pour les marges
@@ -170,12 +170,12 @@ public class FenetreAffichage extends JFrame {
 		// zone de texte 1
 		affichageComptes = new JList<>();
 		JScrollPane scroll = new JScrollPane(affichageComptes);
-		scroll.setPreferredSize(new Dimension(420, 200));
+		scroll.setPreferredSize(new Dimension(520, 200));
 		panneauDroiteHaut.add(scroll);
 		//zone de texte 2
 		affichageDetails = new JList<>();
 		JScrollPane scrollBis = new JScrollPane(affichageDetails);
-		scrollBis.setPreferredSize(new Dimension(420, 200));
+		scrollBis.setPreferredSize(new Dimension(520, 200));
 		panneauDroiteBas.add(scrollBis);
 		
 		panneauDroiteHautBis.add(panneauDroiteHaut);

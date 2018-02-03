@@ -70,14 +70,6 @@ public class Gestionnaire extends Personne implements Serializable{
 
 //METHODES
 
-	/**
-     * @param client 
-     * @param compte 
-     * @return
-     */
-    public void ouvertureCompteCourant(Client client) {
-        client.setCompte(new CompteCourant());
-    }
     
     
     /**
@@ -171,8 +163,8 @@ public class Gestionnaire extends Personne implements Serializable{
 			//On va de client en client dans la collection client
 	    	while(it.hasNext()){
 				client = it.next();
-				Collection <CompteCourant> listeDeComptes = client.getListeComptes();
-		    	Iterator <CompteCourant> itBis = listeDeComptes.iterator();
+				Collection <Compte> listeDeComptes = client.getListeComptes();
+		    	Iterator <Compte> itBis = listeDeComptes.iterator();
 		    	if(!listeDeComptes.isEmpty()){
 		    		//On va de compte en compte dans la collection compte
 					while(itBis.hasNext()){
@@ -191,8 +183,8 @@ public class Gestionnaire extends Personne implements Serializable{
 	 */
 	public double SoldeTotalClient(Client client){
 		double soldeTotal = 0.0;
-		Collection<CompteCourant>listeDeComptes = client.getListeComptes();
-		Iterator <CompteCourant> it = listeDeComptes.iterator();
+		Collection<Compte>listeDeComptes = client.getListeComptes();
+		Iterator <Compte> it = listeDeComptes.iterator();
 		if(!listeDeComptes.isEmpty()){
 			while(it.hasNext()){
 				soldeTotal += it.next().getSolde();
@@ -233,7 +225,7 @@ public class Gestionnaire extends Personne implements Serializable{
 		
 		Collection<Client> clientele = this.getClients();
     	Iterator <Client> it = clientele.iterator();
-    	Collection <CompteCourant> listeCompte = new ArrayList<>();
+    	Collection <Compte> listeCompte = new ArrayList<>();
     	String[] comptes;
     	if(!clientele.isEmpty()){
 			while(it.hasNext()){
@@ -242,7 +234,7 @@ public class Gestionnaire extends Personne implements Serializable{
     	}else{
     		System.out.println("La liste de comptes est vide");
     	}
-    	Iterator<CompteCourant> itBis = listeCompte.iterator();
+    	Iterator<Compte> itBis = listeCompte.iterator();
 		comptes = new String[listeCompte.size()];
 		while(itBis.hasNext()) {
 			for(int i=0; i<listeCompte.size(); i++) {

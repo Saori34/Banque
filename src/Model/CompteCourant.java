@@ -19,6 +19,7 @@ public class CompteCourant extends Compte implements Serializable{
      */
     public CompteCourant() {
     	this.setSolde(Math.random()*(100000.00 - (-1000.00)) + (-1000.00));
+    	this.setType("Compte courant");
     }
 
     /**
