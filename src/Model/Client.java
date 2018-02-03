@@ -11,6 +11,10 @@ import java.util.Scanner;
  */
 public class Client extends Personne implements Serializable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1819121287678461865L;
+	/**
      * Variables
      */
     private String numClient;
@@ -122,7 +126,7 @@ public class Client extends Personne implements Serializable {
 	}
 	
 	/**
-	 * Liste les comptes du client
+	 * Liste les comptes du client en tableau de String pour être affiches dans des JList
 	 */
 	@Override
 	public String[] listerComptes(){

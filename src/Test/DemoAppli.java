@@ -50,6 +50,7 @@ public class DemoAppli {
 		FenetreAffichage.getMenu().addListSelectionListener(control);
 		FenetreAffichage.getJtf().addActionListener(control);
 		FenetreAffichage.getAffichageComptes().addListSelectionListener(control);
+		FenetreAffichage.getAffichageDetails().addListSelectionListener(control);
 		
 	}
 			

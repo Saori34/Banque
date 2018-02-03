@@ -8,6 +8,14 @@ import java.io.Serializable;
 public abstract class Personne implements Serializable{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4216969754888891432L;
+
+
+
+
+	/**
      * Default constructor
      */
     public Personne() {

@@ -5,12 +5,18 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import View.FenetreAffichage;
+
 /**
  * 
  */
 public abstract class Compte implements Serializable{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8355475238212974154L;
+	/**
      * Variables
      */
 	private final long numCompte;
@@ -80,7 +86,7 @@ public abstract class Compte implements Serializable{
      */
     public void depot(double montant) {
         if(montant < 0)
-        	System.err.println("Le montant doit être positif");
+        	FenetreAffichage.dialogErreur("Le montant doit être positif");
         solde += montant;
     }
     
@@ -100,11 +106,12 @@ public abstract class Compte implements Serializable{
      * @param montant 
      * 
      */
-    public void virementSur(Compte compteB, double montant) {
+    public boolean virementSur(Compte compteB, double montant) {
         if(montant < 0)
-        	System.err.println("Le montant doit être positif");
+        	FenetreAffichage.dialogErreur("Le montant doit être positif");
        compteB.depot(montant);
        this.retrait(montant);
+       return true;
     }
     
 

@@ -12,6 +12,13 @@ import java.util.Scanner;
 public class Gestionnaire extends Personne implements Serializable{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5224990411302298571L;
+
+
+
+	/**
      * Default constructor
      */
     public Gestionnaire() {
@@ -197,7 +204,7 @@ public class Gestionnaire extends Personne implements Serializable{
 		
 
 	/**
-	 * Saisir un montant
+	 * Saisir un montant dans la console
 	 * @return montant
 	 */
 	public double saisieMontant(){
@@ -217,6 +224,9 @@ public class Gestionnaire extends Personne implements Serializable{
 		return " ";
 	}
 
+	/**
+	 * Liste les comptes du gestionnaire en tableau de string pour être affiche dans des JLists
+	 */
 	
 	@Override
 	public String[] listerComptes() {

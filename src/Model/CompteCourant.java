@@ -2,12 +2,19 @@ package Model;
 
 import java.io.Serializable;
 
+import View.FenetreAffichage;
+
 /**
  * 
  */
 public class CompteCourant extends Compte implements Serializable{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8924301111130660505L;
+
+	/**
      * Default constructor
      */
     public CompteCourant() {
@@ -65,12 +72,12 @@ public class CompteCourant extends Compte implements Serializable{
 	public boolean retrait(double montant) {
 		boolean retrait = false;
 		if ((this.getSolde() - montant) < decouvertMax){
-			System.err.println("Vous ne pouvez pas dépasser votre découvert autorisé qui est de : " + this.decouvertMax);
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas dépasser votre découvert autorisé qui est de : " + this.decouvertMax);
 	
 		}else if(montant > retraitMax){
-			System.err.println("Vous ne pouvez pas retirer plus de " + this.retraitMax + " euros à la fois");
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas retirer plus de " + this.retraitMax + " euros à la fois");
 		}else if(montant < 0 ){
-	        	System.err.println("Le montant doit être positif");
+			FenetreAffichage.dialogErreur("Le montant doit être positif");
 		}
 		else{
 			setSolde(getSolde() - montant);
@@ -83,12 +90,22 @@ public class CompteCourant extends Compte implements Serializable{
 	 * @see Model.Compte#virementSur(Model.Compte, double)
 	 */
 	@Override
-	public void virementSur(Compte compteB, double montant) {
+	public boolean virementSur(Compte compteB, double montant) {
+		boolean ok = false;
 		if((getSolde() - montant) < decouvertMax){
-			System.err.println("Vous ne pouvez pas dépasser votre découvert autorisé qui est de : " + this.decouvertMax
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas dépasser votre découvert autorisé qui est de : " + this.decouvertMax
 					+ " . Vous pouvez faire un virement maximum de : " + (getSolde() + decouvertMax) + "€");
 		}
-		super.virementSur(compteB, montant);
+		else if(montant > retraitMax){
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas retirer plus de " + this.retraitMax + " euros à la fois");
+		}else if(montant < 0 ){
+			FenetreAffichage.dialogErreur("Le montant doit être positif");
+		}
+		else {
+			super.virementSur(compteB, montant);
+			ok = true;
+		}
+		return ok;
 	}
 	
 	

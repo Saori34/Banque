@@ -1,11 +1,19 @@
 package Model;
 
+import View.FenetreAffichage;
+
 /**
  * 
  */
 public class LivretEpargne extends Compte {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2565156834603454047L;
+
+
+	/**
      * Default constructor
      */
     public LivretEpargne() {
@@ -67,7 +75,7 @@ public class LivretEpargne extends Compte {
 	@Override
 	public void depot(double montant) {
 		if (getSolde() + montant > max){
-			System.err.println("Vous ne pouvez pas dépasser le montant maximum autorisé sur ce compte");
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas dépasser le montant maximum autorisé sur ce compte");
 		}
 		super.depot(montant);
 	}
@@ -77,12 +85,17 @@ public class LivretEpargne extends Compte {
 	 * @see Model.Compte#virementSur(Model.Compte, double)
 	 */
 	@Override
-	public void virementSur(Compte compteB, double montant) {
+	public boolean virementSur(Compte compteB, double montant) {
+		boolean ok = false;
 		if ((getSolde() - montant) < 0){
-			System.err.println("Vous ne pouvez pas être à découvert sur ce compte ! "
+			FenetreAffichage.dialogErreur("Vous ne pouvez pas être à découvert sur ce compte ! "
 					+ "Vous pouvez faire un virement maximum de : " + getSolde() + "€" );
 		}
-		super.virementSur(compteB, montant);
+		else{
+			super.virementSur(compteB, montant);
+			ok = true;
+		}
+		return ok;
 }
 	
 	/*

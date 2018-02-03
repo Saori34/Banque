@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import Model.Client;
+import Model.Compte;
 import Model.CompteCourant;
 import Test.DemoAppli;
 import View.FenetreAffichage;
@@ -28,12 +29,13 @@ public class Controller implements ActionListener, ListSelectionListener {
 	private JList <String>affichageComptes;
 	private JList<String> affichageDetails;
 	static DecimalFormat df = new DecimalFormat("##0.##");
+	static CompteCourant compte1;
+	static CompteCourant compte2;
 	static CompteCourant compte;
 	
 	private boolean clients = false;
 	private boolean comptes = false;
-	private boolean retrait = false;
-	private boolean depot = false;
+	private boolean isFirst = true;
 	
 	
 	public Controller() {
@@ -60,9 +62,9 @@ public class Controller implements ActionListener, ListSelectionListener {
 						try {
 							int montant = Integer.parseInt(texte);
 							if(montant < 0 ){
-								FenetreAffichage.dialogErreurChiffre("Le montant ne doit pas être inférieur à 0");
+								FenetreAffichage.dialogErreur("Le montant ne doit pas être inférieur à 0");
 							}
-							if(retrait) {
+							if(menu.getSelectedIndex() == 3 ) {//si retrait
 								compte = recupCompte();
 								if(compte.retrait(montant)) {
 									jtf.setText("");
@@ -72,22 +74,30 @@ public class Controller implements ActionListener, ListSelectionListener {
 									FenetreAffichage.dialogInfo("Le retrait n'a pas pu être effectué");
 								}
 							}
-							else if(depot) {
+							else if(menu.getSelectedIndex() == 4) {//si depot
 								compte = recupCompte();
 								compte.depot(montant);
 								jtf.setText("");
 								FenetreAffichage.dialogInfo("Dépôt de " + montant + "€ effectué");
 								affichageDetails.setListData(recupClient().listerComptes());
 							}
+							else if(menu.getSelectedIndex() == 5) {//si virement
+								compte2 = recupCompte();
+								if(compte1.virementSur(compte2, montant)) {
+									jtf.setText("");
+									FenetreAffichage.dialogInfo("Virement de " + montant + "€ effectué");
+									affichageDetails.setListData(recupClient().listerComptes());
+								}
+							}
 							
 						}catch(NumberFormatException e) {
-							FenetreAffichage.dialogErreurChiffre("Le montant doit être un nombre supérieur à 0");
+							FenetreAffichage.dialogErreur("Le montant doit être un nombre supérieur à 0");
 						}
 					}else {
-						FenetreAffichage.dialogErreurChiffre("Vous devez d'abord sélectionner un compte");
+						FenetreAffichage.dialogErreur("Vous devez d'abord sélectionner un compte");
 					}
 				}else{		
-					FenetreAffichage.dialogErreurChiffre("Veuillez taper un montant supérieur à 0");
+					FenetreAffichage.dialogErreur("Veuillez taper un montant supérieur à 0");
 				}	
 		}else if(arg0.getSource() == jtf){
 			
@@ -115,8 +125,9 @@ public class Controller implements ActionListener, ListSelectionListener {
 						if(affichageComptes.getSelectedIndex() != -1) {
 							affichageDetails.setListData(recupClient().listerComptes());
 							comptes = true;
-							if(menu.getSelectedIndex() == 5) {
-									int res = FenetreAffichage.dialogConfirm();
+							//si on a choisi l'option supprimer client
+							if(menu.getSelectedIndex() == 6) {
+									int res = FenetreAffichage.dialogConfirm("Etes-vous sûr de vouloir supprimer ce client ?");
 									if(res == JOptionPane.OK_OPTION) {
 										DemoAppli.banquier.supprimerClient(recupClient());
 										afficherListeClients();
@@ -129,9 +140,26 @@ public class Controller implements ActionListener, ListSelectionListener {
 					//si on clique sur un élement de la liste de droite en bas
 					//si ce sont les comptes clients qui sont affiches
 					if(comptes) {
-							recupCompte();
+						//si un item est sélectionné
+						if(affichageDetails.getSelectedIndex() != -1) {
+							//si on a choisi l'option virement
+							if(menu.getSelectedIndex() == 5) {
+								//si isFirst = true alors 1er compte
+								if(isFirst) {
+									isFirst = false;
+									compte1 = recupCompte();
+									FenetreAffichage.dialogInfo("Veuillez sélectionner le compte sur lequel faire le virement");
+								}else {
+									isFirst = true;
+									FenetreAffichage.dialogInfo("Veuillez saisir le montant du virement et cliquer sur valider");
+								}
+							}
+							else {
+								compte = recupCompte();
+							}
+						}
 					}
-					break;
+					break;	
 			}
 		}
 	}
@@ -156,10 +184,11 @@ public Client recupClient() {
  */
 public CompteCourant recupCompte() {
 	if(comptes) {
+		Compte cpt;
 		Collection<CompteCourant>comptes = new ArrayList<>();
 		comptes = recupClient().getListeComptes(); 
-		compte = ((ArrayList<CompteCourant>) comptes).get(getIndexListe(affichageDetails));
-		return compte;
+		cpt = ((ArrayList<CompteCourant>) comptes).get(getIndexListe(affichageDetails));
+		return (CompteCourant) cpt;
 	}
 	return null;
 }
@@ -204,26 +233,27 @@ public void choixMenu(int index){
 	case 3 : 
 		clients = true;
 		comptes = false;
-		retrait = true;
-		depot = false;
 		afficherListeClients();
 		break;
 	case 4 :
 		clients = true;
 		comptes = false;
-		retrait = false;
-		depot = true;
 		afficherListeClients();
 		break;
 	case 5 :
 		clients = true;
+		comptes = false;
+		afficherListeClients();
+		FenetreAffichage.dialogInfo("Veuillez sélectionner le compte à partir duquel faire le virement");
+	case 6 :
+		clients = true;
 		comptes = true;
 		afficherListeClients();
 		 break;
-	case 6 : 
+	case 7 : 
 		comptes = false;
 		clients = false;
-		int res = FenetreAffichage.dialogConfirm();
+		int res = FenetreAffichage.dialogConfirm("Etes-vous sûr de vouloir sauvegarder les données ?");
 		if(res == JOptionPane.OK_OPTION) {
 			//on sauvegarde la liste clients
 			if(DemoAppli.saveDataIntoFile("./assets/saveClients.txt"))
@@ -231,10 +261,10 @@ public void choixMenu(int index){
 		}
 		
 		 break;
-	case 7 :
+	case 8 :
 		comptes = false;
 		clients = false;
-		int result = FenetreAffichage.dialogConfirm();
+		int result = FenetreAffichage.dialogConfirm("Etes-vous sûr de vouloir restaurer les données sauvegardées ?");
 		if(result == JOptionPane.OK_OPTION) {
 			//on restaure la liste clients
 			DemoAppli.banquier.setClients(DemoAppli.restoreDataFromFile("./assets/saveClients.txt"));
