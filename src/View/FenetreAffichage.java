@@ -143,6 +143,10 @@ public class FenetreAffichage extends JFrame {
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
 		
+		
+		
+		
+		
 		// Creation d'un panneau à droite pour l'affichage
 		JPanel panneauDroite = new JPanel(new BorderLayout());
 
