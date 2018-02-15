@@ -129,6 +129,7 @@ public class FenetreAffichage extends JFrame {
 		bouton.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 		valider = new JButton("Valider le montant");
 		valider.setPreferredSize(new Dimension(150, 35));
+		valider.setEnabled(false);
 		bouton.add(valider);
 
 		// Mise en place du panel de menu principal
@@ -194,6 +195,11 @@ public class FenetreAffichage extends JFrame {
 		c.add(panneauDroite, BorderLayout.EAST);
 		c.setVisible(true);
 
+	}
+	
+	public void affichagePanDroiteHaut() {
+		
+		
 	}
 
 /**

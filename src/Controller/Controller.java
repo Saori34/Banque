@@ -133,6 +133,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 				case "affichageDetails" : //si on clique sur un élement de la liste de droite en bas
 					if(comptes) {//si ce sont les comptes clients qui sont affiches
 						if(affichageDetails.getSelectedIndex() != -1) {//si un item est sélectionné
+							valider.setEnabled(true);
 							if(menu.getSelectedIndex() == 5) {//si on a choisi l'option virement
 								if(isFirst) {//si isFirst = true alors 1er compte
 									isFirst = false;
