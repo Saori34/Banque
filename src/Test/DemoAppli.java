@@ -26,7 +26,6 @@ public class DemoAppli {
 	static Collection <Client> clientele;
 	public static Gestionnaire banquier = new Gestionnaire();
 	
-    public static File file;
     public static FenetreAffichage fenetre;
     public static Controller control;
 
